@@ -45,6 +45,31 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /mashup:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: mashup
+    x-a127-apply: {}
+    get:
+      description: Returns a session/speaker complete payload to the caller
+      # used as the method name of the controller
+      operationId: mashup
+      parameters:
+        - name: sessionTitleFragment
+          in: query
+          description:  Any string that appears in the title of a session
+          required: true
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/MashupResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 # complex objects have schema definitions
 definitions:
   HelloWorldResponse:
@@ -52,6 +77,32 @@ definitions:
       - message
     properties:
       message:
+        type: string
+  MashupResponse:
+    required:
+      - name
+      - title
+      - uuid
+      - speaker
+      - bio
+    properties:
+      name:
+        type: string
+      title:
+        type: string
+      uuid:
+        type: string
+      date:
+        type: string
+      time:
+        type: string
+      room:
+        type: string
+      description:
+        type: string
+      speaker:
+        type: string
+      bio:
         type: string
   ErrorResponse:
     required:
