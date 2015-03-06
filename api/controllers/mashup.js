@@ -1,6 +1,6 @@
 'use strict'
 
-var util = require('util')
+var request = require('request')
 var usergrid = require('usergrid')
 
 var client = new usergrid.client({
@@ -17,6 +17,28 @@ module.exports = {
   mashup: mashup
 }
 
+function requestSpeaker(res, sessions, index, waitingForSpeakers) {
+  request.get({url:"https://api.usergrid.com/devnexus/2015/speakers/"+sessions[index].speaker,
+    headers:{Authorization:'Bearer YWMtL-djUsQ4EeS1UDXl8h2kkAAAAUwUo_m2TcRZ_Hvi53vTeAgimwHKN21oK2g'}},
+    function(err, resp, body) {
+      if( err ) {
+        res.jsonp(err)
+      } else {
+        console.log('inside closure, index='+index)
+        --waitingForSpeakers
+//            console.log('waitingForSpeakers='+waitingForSpeakers)
+        var spkr = JSON.parse(body).entities[0]  // we KNOW we only got one speaker
+        sessions[index].bio = spkr.bio
+        sessions[index].social = spkr.social
+        sessions.push(sessions[index])
+
+        if( !waitingForSpeakers )
+          res.jsonp(sessions)
+      }
+    }
+  )
+}
+
 function mashup(req, res) {
   client.createCollection({
     type: 'sessions',
@@ -28,16 +50,18 @@ function mashup(req, res) {
     }
 
     var sessions = []
+    var waitingForSpeakers = 0
+    var index = 0
     while( results.hasNextEntity() ) {
-      var session = results.getNextEntity().get()
-      sessions.push(session)
-      var speaker = session.speaker
+      sessions[index] = results.getNextEntity().get()
+      console.log('index='+index)
 
-      // TODO retrieve speaker bio & social links
-      
-      console.log(session.title+' by '+speaker)
+      // retrieve speaker to include bio & social links
+      ++waitingForSpeakers
+      console.log('waitingForSpeakers='+waitingForSpeakers)
+      requestSpeaker(res, sessions, index, waitingForSpeakers)
+      ++index
     }
-    res.json(sessions)
 
   })
 }
