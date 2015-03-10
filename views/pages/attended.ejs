@@ -2,6 +2,15 @@
 <html lang="en">
 <head>
     <% include ../partials/head %>
+    <link rel="stylesheet" href="js/jqwidgets/styles/jqx.base.css" type="text/css" />
+    <link rel="stylesheet" href="js/jqwidgets/styles/jqx.summer.css" type="text/css" />
+
+    <script type="text/javascript" src="js/jqwidgets/jquery-1.11.1.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="js/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="js/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="js/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="js/jqwidgets/jqxcheckbox.js"></script>
 </head>
 <body class="container">
 
@@ -12,7 +21,8 @@
     <main>
         <div class="jumbotron">
             <h1>Sessions You Have Attended</h1>
-            <p>TBD</p>
+            <div  id='ListBox'>
+            </div>
         </div>
     </main>
 
@@ -20,5 +30,18 @@
         <% include ../partials/footer %>
     </footer>
 
+    <script type="text/javascript">
+      var source = [
+          "Affogato",
+          "Americano",
+          "Bicerin",
+          "Breve",
+          "Café Bombón",
+          "Café au lait"
+      ];
+
+      // Create a ListBox.
+      $("#ListBox").jqxListBox({ source: source, checkboxes: true, width: '200', height: '250px', theme: 'summer'});
+    </script>
 </body>
 </html>

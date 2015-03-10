@@ -1,4 +1,7 @@
+
+
 module.exports=function(app) {
+
   app.get('/',function(req,res){
     res.render('pages/index')
   });
@@ -12,6 +15,8 @@ module.exports=function(app) {
   })
 
   app.get('/intending', function(req,res){
-    res.render('pages/intending')
+    res.render('pages/intending', {
+      sessions: JSON.stringify(require('../app').allSessions)
+    })
   })
 }
