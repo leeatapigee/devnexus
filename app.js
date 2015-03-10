@@ -11,7 +11,7 @@ var allSessions
 
 function loadSessions() {
   allSessions = []
-  request.get('http://api.usergrid.com/devnexus/2015/sessions?ql=select%20uuid,name,title,date,time&limit=500',
+  request.get('http://api.usergrid.com/devnexus/2015/sessions?ql=select%20uuid,name,title,date,time order by millis&limit=500',
     function(err, resp, body) {
       if( !err && resp.statusCode === 200 ) {
         var res = JSON.parse(body)
@@ -30,6 +30,7 @@ function loadSessions() {
 //app.use(express.bodyParser());
 
 app.use(express.static(__dirname + '/public'))
+
 
 a127.init(function(config) {
 

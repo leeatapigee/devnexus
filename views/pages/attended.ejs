@@ -11,6 +11,7 @@
     <script type="text/javascript" src="js/jqwidgets/jqxscrollbar.js"></script>
     <script type="text/javascript" src="js/jqwidgets/jqxlistbox.js"></script>
     <script type="text/javascript" src="js/jqwidgets/jqxcheckbox.js"></script>
+    <script type="text/javascript" src="js/jqwidgets/jqxdata.js"></script>
 </head>
 <body class="container">
 
@@ -21,8 +22,7 @@
     <main>
         <div class="jumbotron">
             <h1>Sessions You Have Attended</h1>
-            <div  id='ListBox'>
-            </div>
+            <div  id='ListBox'/>
         </div>
     </main>
 
@@ -31,17 +31,26 @@
     </footer>
 
     <script type="text/javascript">
-      var source = [
-          "Affogato",
-          "Americano",
-          "Bicerin",
-          "Breve",
-          "Café Bombón",
-          "Café au lait"
-      ];
+      var sess = JSON.parse('<%- sessions %>')
 
       // Create a ListBox.
-      $("#ListBox").jqxListBox({ source: source, checkboxes: true, width: '200', height: '250px', theme: 'summer'});
+      $("#ListBox").jqxListBox({ source: sess, checkboxes: true, width: '90%', height: '400px', theme: 'summer'});
+
+      // handle change of a checkbox
+      $("#ListBox").on('checkChange', function (event) {
+          var args = event.args;
+          // get new check state.
+          var checked = args.checked;
+          // get the item and it's label and value fields.
+          var item = args.item;
+          var itemLabel = item.label;
+          var itemValue = item.value;
+          // get all checked items.
+          var checkedItems = $("#ListBox").jqxListBox('getCheckedItems');
+          console.log('checkedItems:', checkedItems)
+
+          // TODO send request to associate attendee with session
+      });
     </script>
 </body>
 </html>
